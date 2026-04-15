@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alegra – Portal de Feedback</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --alegra-green: #00C48C;
+      --alegra-dark: #0D1117;
+      --alegra-card: #141B23;
+      --alegra-border: rgba(255, 255, 255, 0.07);
+      --alegra-muted: #6B7684;
+      --alegra-text: #E8EBF0;
+      --alegra-subtext: #9AA3AF;
+      --pos-color: #00C48C;
+      --cont-color: #4B9DFF;
+      --nom-color: #A78BFA;
+      --success: #00C48C;
+      --danger: #FF5C5C;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--alegra-dark);
+      color: var(--alegra-text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(0, 196, 140, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 560px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0, 196, 140, 0.1);
+      border: 1px solid rgba(0, 196, 140, 0.25);
+      padding: 8px 18px;
+      border-radius: 100px;
+      margin-bottom: 1.25rem;
+    }
+
+    .logo-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--alegra-green);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.5;
+        transform: scale(0.85);
+      }
+    }
+
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--alegra-green);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--alegra-text);
+      margin-bottom: 0.5rem;
+    }
+
+    h1 span {
+      color: var(--alegra-green);
+    }
+
+    .subtitle {
+      font-size: 15px;
+      color: var(--alegra-subtext);
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    .card {
+      background: var(--alegra-card);
+      border: 1px solid var(--alegra-border);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--alegra-subtext);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.6rem;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--alegra-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      color: var(--alegra-text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      transition: border-color 0.2s, background 0.2s;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: rgba(0, 196, 140, 0.5);
+      background: rgba(0, 196, 140, 0.04);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--alegra-muted);
+      font-weight: 300;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .product-option {
+      position: relative;
+    }
+
+    .product-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .product-label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--alegra-border);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .product-label:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .product-option input:checked+.product-label {
+      border-color: rgba(0, 196, 140, 0.6);
+      background: rgba(0, 196, 140, 0.08);
+    }
+
+    .product-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .icon-pos {
+      background: rgba(0, 196, 140, 0.15);
+    }
+
+    .icon-cont {
+      background: rgba(75, 157, 255, 0.15);
+    }
+
+    .icon-nom {
+      background: rgba(167, 139, 250, 0.15);
+    }
+
+    .product-name {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--alegra-subtext);
+      line-height: 1.3;
+    }
+
+    .product-option input:checked+.product-label .product-name {
+      color: var(--alegra-text);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--alegra-border);
+      margin: 1.5rem 0;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: var(--alegra-green);
+      color: #0D1117;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn:hover {
+      background: #00D99A;
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity 0.2s;
+    }
+
+    .optional-tag {
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--alegra-muted);
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-left: 6px;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: 0;
+      vertical-align: middle;
+    }
+
+    .char-counter {
+      text-align: right;
+      font-size: 12px;
+      color: var(--alegra-muted);
+      margin-top: 6px;
+      transition: color 0.2s;
+    }
+
+    .char-counter.warn {
+      color: #FBBF24;
+    }
+
+    .char-counter.danger {
+      color: var(--danger);
+    }
+
+    .error-msg {
+      font-size: 12px;
+      color: var(--danger);
+      margin-top: 5px;
+      display: none;
+    }
+
+    .error-msg.visible {
+      display: block;
+    }
+
+    .success-overlay {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem 2rem;
+      gap: 1rem;
+    }
+
+    .success-overlay.visible {
+      display: flex;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(0, 196, 140, 0.15);
+      border: 2px solid rgba(0, 196, 140, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .success-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .success-sub {
+      font-size: 14px;
+      color: var(--alegra-subtext);
+      line-height: 1.6;
+      max-width: 300px;
+    }
+
+    .new-btn {
+      margin-top: 0.5rem;
+      padding: 10px 24px;
+      background: rgba(0, 196, 140, 0.1);
+      color: var(--alegra-green);
+      border: 1px solid rgba(0, 196, 140, 0.3);
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .new-btn:hover {
+      background: rgba(0, 196, 140, 0.18);
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--alegra-muted);
+      margin-top: 1.5rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+
+      .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .product-label {
+        padding: 12px 6px;
+      }
+
+      .product-name {
+        font-size: 11px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="logo-area">
+      <div class="logo-badge">
+        <div class="logo-dot"></div>
+        <span class="logo-text">Alegra Feedback</span>
+      </div>
+      <h1>Tu opinión<br><span>hace la diferencia</span></h1>
+      <p class="subtitle">Cuéntanos tu experiencia con nuestros productos.<br>Cada comentario nos ayuda a mejorar.</p>
+    </div>
+
+    <div class="card">
+
+      <div id="form-section">
+        <form id="feedbackForm" novalidate>
+
+          <div class="form-group">
+            <label>Nombre <span class="optional-tag">opcional</span></label>
+            <input type="text" id="nombre" placeholder="¿Cómo te llamas?" maxlength="80" autocomplete="name">
+          </div>
+
+          <div class="form-group">
+            <label>Producto</label>
+            <div class="product-grid">
+              <div class="product-option">
+                <input type="radio" name="producto" id="pos" value="Alegra POS">
+                <label class="product-label" for="pos">
+                  <div class="product-icon icon-pos">🛒</div>
+                  <span class="product-name">Alegra POS</span>
+                </label>
+              </div>
+              <div class="product-option">
+                <input type="radio" name="producto" id="cont" value="Alegra Contabilidad">
+                <label class="product-label" for="cont">
+                  <div class="product-icon icon-cont">📊</div>
+                  <span class="product-name">Alegra Contabilidad</span>
+                </label>
+              </div>
+              <div class="product-option">
+                <input type="radio" name="producto" id="nom" value="Alegra Nómina">
+                <label class="product-label" for="nom">
+                  <div class="product-icon icon-nom">👥</div>
+                  <span class="product-name">Alegra Nómina</span>
+                </label>
+              </div>
+            </div>
+            <div class="error-msg" id="prod-error">Por favor selecciona un producto.</div>
+          </div>
+
+          <div class="form-group">
+            <label>Tu comentario</label>
+            <textarea id="comentario" placeholder="Describe tu experiencia, sugerencia o problema..."
+              maxlength="1000"></textarea>
+            <div class="char-counter" id="charCount">0 / 1000</div>
+            <div class="error-msg" id="com-error">El comentario no puede estar vacío.</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span class="btn-inner" id="btnInner">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+              Enviar feedback
+            </span>
+          </button>
+
+        </form>
+      </div>
+
+      <div class="success-overlay" id="successSection">
+        <div class="success-icon">✓</div>
+        <h2 class="success-title">¡Gracias por tu feedback!</h2>
+        <p class="success-sub">Tu comentario fue registrado exitosamente y será analizado por nuestro equipo.</p>
+        <button class="new-btn" onclick="resetForm()">Enviar otro comentario</button>
+      </div>
+
+    </div>
+
+    <p class="footer-note">Tus datos son tratados con confidencialidad.<br>© 2025 Alegra – Sistema centralizado de
+      retroalimentación.</p>
+  </div>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5HBK00KqicKGSfDYKE3O052ILQ1EE978gqo9IerXr_UGFMGMmrf4i2O8_HMM-w7LT/exec';
+
+    const textarea = document.getElementById('comentario');
+    const charCount = document.getElementById('charCount');
+
+    textarea.addEventListener('input', () => {
+      const len = textarea.value.length;
+      charCount.textContent = len + ' / 1000';
+      charCount.className = 'char-counter' + (len > 900 ? ' danger' : len > 700 ? ' warn' : '');
+    });
+
+    document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      let valid = true;
+
+      const prodEl = document.querySelector('input[name="producto"]:checked');
+      const comEl = document.getElementById('comentario');
+      const prodErr = document.getElementById('prod-error');
+      const comErr = document.getElementById('com-error');
+
+      prodErr.classList.remove('visible');
+      comErr.classList.remove('visible');
+
+      if (!prodEl) { prodErr.classList.add('visible'); valid = false; }
+      if (!comEl.value.trim()) { comErr.classList.add('visible'); valid = false; }
+      if (!valid) return;
+
+      const btn = document.getElementById('submitBtn');
+      const inner = document.getElementById('btnInner');
+      btn.disabled = true;
+      inner.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" opacity="0.3"/><path d="M12 2a10 10 0 0 1 10 10"><animateTransform attributeName="transform" type="rotate" values="0 12 12;360 12 12" dur="0.8s" repeatCount="indefinite"/></path></svg> Enviando...';
+
+      const now = new Date();
+      const ts = now.getFullYear() + '-' +
+        String(now.getMonth() + 1).padStart(2, '0') + '-' +
+        String(now.getDate()).padStart(2, '0') + ' ' +
+        String(now.getHours()).padStart(2, '0') + ':' +
+        String(now.getMinutes()).padStart(2, '0');
+
+      const payload = {
+        timestamp: ts,
+        producto: prodEl.value,
+        comentario: comEl.value.trim(),
+        nombre: document.getElementById('nombre').value.trim() || 'Anónimo'
+      };
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(payload)
+        });
+        document.getElementById('form-section').style.display = 'none';
+        document.getElementById('successSection').classList.add('visible');
+      } catch (err) {
+        alert('Ocurrió un error al enviar. Por favor intenta de nuevo.');
+        btn.disabled = false;
+        inner.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg> Enviar feedback';
+      }
+    });
+
+    function resetForm() {
+      document.getElementById('feedbackForm').reset();
+      document.getElementById('charCount').textContent = '0 / 1000';
+      document.getElementById('form-section').style.display = 'block';
+      document.getElementById('successSection').classList.remove('visible');
+      document.getElementById('submitBtn').disabled = false;
+      document.getElementById('btnInner').innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg> Enviar feedback';
+    }
+  </script>
+</body>
+
+</html>
