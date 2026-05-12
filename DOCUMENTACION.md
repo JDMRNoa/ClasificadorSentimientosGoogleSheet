@@ -26,11 +26,11 @@ Sistema centralizado de retroalimentación para los productos **Alegra POS**, **
 
 | # | Entregable | Archivo | Estado |
 |---|-----------|---------|--------|
-| 1 | Interfaz de recolección | `feedback-form.html` | ✓ |
-| 2 | Hoja de cálculo estructurada | Google Sheets | ✓ |
-| 3 | Clasificación con Gemini | `AlegraFeedback.gs` | ✓ |
-| 4 | Dashboard Looker Studio | Configuración manual | ✓ (ver instrucciones) |
-| 5 | Documentación técnica | Este archivo | ✓ |
+| 1 | Interfaz de recolección | `feedback-form.html` | Completado |
+| 2 | Hoja de cálculo estructurada | Google Sheets | Completado |
+| 3 | Clasificación con Gemini | `AlegraFeedback.gs` | Completado |
+| 4 | Dashboard Looker Studio | Configuración manual | Completado (ver instrucciones) |
+| 5 | Documentación técnica | Este archivo | Completado |
 
 ---
 
@@ -43,7 +43,7 @@ Sistema centralizado de retroalimentación para los productos **Alegra POS**, **
 3. Haz clic en **"Get API key"** → **"Create API key"**
 4. Copia la clave generada (empieza con `AIza...`)
 
-> ⚠️ **Nota sobre el plan gratuito (2026):** Google redujo los límites del free tier. El modelo recomendado es `gemini-2.5-flash-lite` con un límite de 15 RPM y 1000 solicitudes/día. No uses `gemini-1.5-flash` ni `gemini-2.0-flash` — ambos están deprecados.
+> **Nota sobre el plan gratuito (2026):** Google redujo los límites del free tier. El modelo recomendado es `gemini-2.5-flash-lite` con un límite de 15 RPM y 1000 solicitudes/día. No uses `gemini-1.5-flash` ni `gemini-2.0-flash` — ambos están deprecados.
 
 ---
 
@@ -247,4 +247,4 @@ Analiza este comentario: "{comentario}"
 
 ---
 
-*Documentación generada como parte de la prueba técnica para Automation Support Intern (Aprendiz SENA) — Alegra, 2026.*
+*Prueba técnica para Automation Support Intern (Aprendiz SENA) — Alegra, 2026.*

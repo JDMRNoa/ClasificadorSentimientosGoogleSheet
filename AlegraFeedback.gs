@@ -1,6 +1,6 @@
 // ============================================================
 //  ALEGRA FEEDBACK SYSTEM — Google Apps Script
-//  Autor: Jesús Mantilla (NOA) — Prueba técnica Alegra 2025
+//  Autor: Jesús Mantilla (APRENDIZ SENA) — Prueba técnica Alegra
 //  Versión: 1.0
 // ============================================================
 //
@@ -37,13 +37,6 @@ const CONFIG = {
 //  SECCIÓN 1 — WEBHOOK: recibe datos desde la interfaz web
 // ============================================================
 
-/**
- * Endpoint POST — la interfaz HTML envía datos aquí.
- * Para activar: Implementar > Nueva implementación > Web App
- *   - Ejecutar como: Yo
- *   - Quién tiene acceso: Cualquier persona
- * Copia la URL generada y pégala en feedback-form.html → SCRIPT_URL
- */
 function doPost(e) {
   try {
     if (!e || !e.postData || !e.postData.contents) {
@@ -72,9 +65,6 @@ function doPost(e) {
   }
 }
 
-/**
- * GET simple — prueba que el webhook esté activo.
- */
 function doGet() {
   return ContentService
     .createTextOutput(JSON.stringify({ status: 'ok', message: 'Alegra Feedback API activa.' }))
@@ -86,11 +76,6 @@ function doGet() {
 //  SECCIÓN 2 — CLASIFICACIÓN AUTOMÁTICA CON GEMINI
 // ============================================================
 
-/**
- * Clasifica TODAS las filas que aún no tienen sentimiento.
- * Se ejecuta automáticamente cada 5 minutos (ver setupTrigger).
- * También puedes ejecutarla manualmente desde el editor.
- */
 function clasificarPendientes() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
@@ -150,18 +135,14 @@ function clasificarPendientes() {
     }
   }
 
-  const resumenBody = '✅ Procesados: ' + clasificados + 
-                    '\n❌ Errores: ' + errores + 
-                    '\n⏭️ Saltados (ya tenían datos): ' + saltados;
+  const resumenBody = 'Procesados: ' + clasificados + 
+                    '\nErrores: ' + errores + 
+                    '\nSaltados (ya tenían datos): ' + saltados;
   
   Logger.log(resumenBody);
   SpreadsheetApp.getUi().alert('Proceso finalizado\n\n' + resumenBody);
 }
 
-/**
- * Llama a la API de Gemini para analizar un comentario.
- * Retorna { sentimiento: string, resumen: string }
- */
 function analizarConGemini(comentario) {
   const systemPrompt = `Eres un experto en experiencia de cliente. Tu tarea es analizar feedback de usuarios de Alegra.
   
@@ -247,9 +228,6 @@ Valores de SENTIMIENTO: Positivo, Neutro o Negativo.`;
   throw lastError;
 }
 
-/**
- * Colorea la celda E según el sentimiento para visual rápida en el Sheet.
- */
 function colorearSentimiento(sheet, row, sentimiento) {
   const cell = sheet.getRange(row, CONFIG.COL.SENTIMIENTO);
   switch (sentimiento) {
@@ -272,10 +250,6 @@ function colorearSentimiento(sheet, row, sentimiento) {
 //  SECCIÓN 3 — TRIGGERS Y SETUP
 // ============================================================
 
-/**
- * Ejecuta esto UNA VEZ para configurar la clasificación automática.
- * Crea un trigger que ejecuta clasificarPendientes() cada 5 minutos.
- */
 function setupTrigger() {
   // Eliminar triggers previos del mismo nombre para evitar duplicados
   const triggers = ScriptApp.getProjectTriggers();
@@ -292,22 +266,14 @@ function setupTrigger() {
     .create();
 
   Logger.log('Trigger creado: clasificarPendientes se ejecutará cada 5 minutos.');
-  SpreadsheetApp.getUi().alert('✓ Trigger activado. La clasificación automática correrá cada 5 minutos.');
+  SpreadsheetApp.getUi().alert('Trigger activado. La clasificación automática correrá cada 5 minutos.');
 }
 
-/**
- * Clasifica manualmente las filas seleccionadas o todas las pendientes.
- * Útil para testing sin esperar el trigger.
- */
 function clasificarManual() {
   clasificarPendientes();
   SpreadsheetApp.getUi().alert('Clasificación completada. Revisa el log para detalles (Ver > Registros).');
 }
 
-/**
- * Inicializa la hoja con encabezados si está vacía.
- * Ejecuta esto si tu hoja es nueva.
- */
 function inicializarHoja() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   let sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
@@ -343,15 +309,12 @@ function inicializarHoja() {
     sheet.setColumnWidth(6, 300); // Resumen IA
 
     Logger.log('Hoja inicializada con encabezados.');
-    SpreadsheetApp.getUi().alert('✓ Hoja "Feedback" inicializada correctamente.');
+    SpreadsheetApp.getUi().alert('Hoja "Feedback" inicializada correctamente.');
   } else {
     SpreadsheetApp.getUi().alert('La hoja ya tiene contenido. No se modificó.');
   }
 }
 
-/**
- * Agrega un menú personalizado en el Google Sheet.
- */
 function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('Alegra Feedback')
@@ -369,10 +332,6 @@ function onOpen() {
 //  SECCIÓN 4 — UTILIDADES DE TESTING
 // ============================================================
 
-/**
- * Prueba la conexión con Gemini sin tocar el Sheet.
- * Ejecuta esto primero para verificar que tu API key funciona.
- */
 function testGemini() {
   const comentarioPrueba = 'La interfaz es muy intuitiva y fácil de usar.';
   try {
@@ -387,9 +346,6 @@ function testGemini() {
   }
 }
 
-/**
- * Inserta los 10 registros de la base de datos inicial para testing.
- */
 function cargarDatosIniciales() {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(CONFIG.SHEET_NAME);
   if (!sheet) { Logger.log('Hoja no encontrada'); return; }
@@ -413,7 +369,7 @@ function cargarDatosIniciales() {
 
   sheet.getRange(startRow, 1, datos.length, 6).setValues(datos);
   Logger.log('10 registros iniciales cargados desde fila ' + startRow);
-  SpreadsheetApp.getUi().alert('✓ 10 registros de prueba cargados. Ahora ejecuta "Clasificar pendientes".');
+  SpreadsheetApp.getUi().alert('10 registros de prueba cargados. Ahora ejecuta \"Clasificar pendientes\".');
 }
 
 function reintentarErrores() {
